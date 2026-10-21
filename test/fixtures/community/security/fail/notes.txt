@@ -1,0 +1,1 @@
+This fixture intentionally has no security policy file.

@@ -1,0 +1,7 @@
+# /src/ owns everything under src/
+/src/ @alice
+docs/ @bob
+package.json @carol
+README.md @bob
+LICENSE @alice
+.github/ @devops

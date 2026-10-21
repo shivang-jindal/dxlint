@@ -1,0 +1,24 @@
+{
+  "name": "dxlint",
+  "version": "0.1.0",
+  "description": "dxlint — the contributor experience linter. Lint your repository's onboarding. Get a grade. Get a fix PR.",
+  "type": "module",
+  "bin": {
+    "dxlint": "./src/cli.js"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "developer-experience",
+    "linter",
+    "onboarding",
+    "repository-health",
+    "contributor-experience",
+    "open-source"
+  ]
+}

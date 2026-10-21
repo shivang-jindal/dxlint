@@ -1,0 +1,3 @@
+# Only the core paths are owned here — well under 80% coverage.
+/src/ @alice
+/docs/ @bob

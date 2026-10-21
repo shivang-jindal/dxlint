@@ -1,0 +1,2 @@
+This fixture intentionally has no CONTRIBUTING file; this note keeps the
+directory present in checkouts without adding a contributing guide.

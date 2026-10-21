@@ -1,0 +1,4 @@
+boom
+
+The rule-crash fixture: the test's crashing rule throws whenever it reads
+this file, to prove per-rule isolation keeps the rest of the scan alive.

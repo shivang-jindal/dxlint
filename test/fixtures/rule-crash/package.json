@@ -1,0 +1,8 @@
+{
+  "name": "dxlint-fixture-rule-crash",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

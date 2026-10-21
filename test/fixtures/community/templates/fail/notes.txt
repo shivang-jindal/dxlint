@@ -1,0 +1,1 @@
+This fixture intentionally has neither issue nor pull request templates.
