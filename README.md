@@ -211,6 +211,10 @@ tier):
 - **Reporters** — terminal (findings grouped by severity + newcomer
   narrative + grade + `dxlint fix` hint), `--format json` (stable schema,
   deterministic), `--format md`, and `dxlint badge` writing Shields JSON.
+- **`--format github`** — GitHub Actions workflow commands: one
+  `::error file=<path>,line=<line>,col=<col>,title=<ruleId>::<message>`
+  annotation per finding (with GH `%%/%0D/%0A` escaping) plus a final
+  `::notice::dxlint: <grade> grade, <N> findings` summary line
 - **`dxlint fix`** — dry-run by default (lists the files it *would* create
   with content previews); `--apply` creates only missing files (LICENSE stub
   with an SPDX note, SECURITY.md, CODE_OF_CONDUCT.md, issue/PR templates),
@@ -229,7 +233,7 @@ stay out of the grade denominator — so the default run honestly reports
 baseline/ratchet (`--baseline`, `--update-baseline`), `fix --pr`, `init`,
 the Action wrapper, and `dxlint-rule-*` plugin discovery.
 
-Tests: **83 passing** (`node --test test/`) — per-rule pass/fail fixture
+Tests: **87 passing** (`node --test test/`) — per-rule pass/fail fixture
 pairs asserting exact findings, golden grade tests (A+ / A- / coverage
 denominator cases), fix idempotence + dry-run-writes-nothing, rule-crash
 isolation, and the determinism gate (two runs → identical JSON).

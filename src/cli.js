@@ -13,12 +13,13 @@ import { ALL_RULES, getRule, groupOfRule } from './rules/index.js';
 import { buildReport, renderJson } from './reporters/json.js';
 import { renderTerminal } from './reporters/terminal.js';
 import { renderMarkdown } from './reporters/md.js';
+import { renderGithub } from './reporters/github.js';
 import { renderBadge } from './reporters/badge.js';
 import { planFixes, applyFixes } from './fix.js';
 
 const COMMANDS = ['lint', 'fix', 'explain', 'rules', 'badge'];
 const KNOWN_NOT_IMPLEMENTED = ['init', 'scan'];
-const FORMATS = ['terminal', 'json', 'md'];
+const FORMATS = ['terminal', 'json', 'md', 'github'];
 const TIERS = ['cheap', 'api', 'container'];
 const FAIL_ON = ['error', 'warning', 'info', 'none'];
 const SEVERITY_RANK = { info: 1, warning: 2, error: 3 };
@@ -47,7 +48,9 @@ Usage:
   dxlint badge [path] [--out f]   write a Shields.io badge JSON file
 
 Options:
-  --format terminal|json|md   report format (default: terminal)
+  --format terminal|json|md|github
+                              report format (default: terminal; github emits
+                              Actions workflow-command annotations)
   --output <file>             write the report to a file instead of stdout
   --fail-on <severity>        error|warning|info|none (default: error)
   --strict                    shorthand for --fail-on warning
@@ -198,7 +201,13 @@ async function runLint(args, io) {
   });
 
   const text =
-    format === 'json' ? renderJson(report) : format === 'md' ? renderMarkdown(report) : renderTerminal(report);
+    format === 'json'
+      ? renderJson(report)
+      : format === 'md'
+        ? renderMarkdown(report)
+        : format === 'github'
+          ? renderGithub(report)
+          : renderTerminal(report);
 
   if (args.output) {
     fs.writeFileSync(args.output, text, 'utf8');
