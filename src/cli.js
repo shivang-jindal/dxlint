@@ -185,12 +185,20 @@ async function runLint(args, io) {
   const targetArg = args.positionals[0] ?? null;
   const abs = resolveTarget(targetArg);
   const ctx = io.makeContext(abs);
+  const ruleFilter = parseRuleFilter(args.rules);
   const scan = await runScan({
     rules: ALL_RULES,
     ctx,
     tier,
-    ruleFilter: parseRuleFilter(args.rules),
+    ruleFilter,
   });
+  // A typo'd --rules include (e.g. "docs/existsnce") matches nothing and the
+  // run would exit 0 having linted zero rules — say so on stderr.
+  if (ruleFilter.include.length > 0 && scan.results.length === 0) {
+    io.stderr.write(
+      `dxlint: --rules matched no rules (${ruleFilter.include.join(', ')}) — nothing was linted\n`,
+    );
+  }
   const grade = computeGrade(scan.results);
   const report = buildReport({
     target: targetArg ?? '.',

@@ -8,7 +8,10 @@ import path from 'node:path';
 function defaultWriter(root, relPath, content) {
   const abs = path.join(root, relPath);
   fs.mkdirSync(path.dirname(abs), { recursive: true });
-  fs.writeFileSync(abs, content, 'utf8');
+  // 'wx' = create-only: the v0 contract is "never edits existing prose". A
+  // file appearing between planFixes' exists check and this write (TOCTOU,
+  // concurrent run) must not be overwritten.
+  fs.writeFileSync(abs, content, { encoding: 'utf8', flag: 'wx' });
 }
 
 /**
@@ -51,8 +54,15 @@ export async function planFixes({ scan, ctx }) {
 export function applyFixes(root, plan, { writer = defaultWriter } = {}) {
   const created = [];
   for (const item of plan) {
-    writer(root, item.path, item.content);
-    created.push(item.path);
+    try {
+      writer(root, item.path, item.content);
+      created.push(item.path);
+    } catch (err) {
+      // The file appeared after planning (create-only writer refuses to
+      // clobber it) — honest skip: it exists, which is the desired end state.
+      if (err && err.code === 'EEXIST') continue;
+      throw err;
+    }
   }
   return created;
 }
